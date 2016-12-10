@@ -6,6 +6,37 @@ doklady-translate is a simple example of mongoDB data query in Clojure using Inc
 
 -git clone; cd into folder.
 
+There are a plethora of ways you can use doklady. Because it is written in pure clojure, you have the freedom to parse CSV data using our mapreduce embedded inside doklady_map. 
+
+;; To start, require this namespace, `clojure.java.io`, and your favorite CSV parser (e.g.,
+;; [clojure-csv](https://github.com/davidsantiago/clojure-csv) or 
+;; [clojure/data.csv](https://github.com/clojure/data.csv); we'll mostly be using the former).
+
+     (require '[semantic-csv.core :refer :all]
+              '[clojure-csv.core :as csv]
+              '[clojure.java.io :as io])
+
+For example, remember that with the Java I/O we can implement a quick call to fetch the data written inside a text file.
+
+(with-open [r (clojure.java.io/input-stream "myfile.txt")] 
+         (loop [c (.read r)] 
+           (if (not= c -1)
+             (do 
+               (print (char c)) 
+               (recur (.read r))))))
+
+Also....
+
+(defn write-csv-file
+  "Writes a csv file using a key and an s-o-s (sequence of sequences)"
+  [out-sos out-file]
+
+  (spit out-file "" :append false)
+  (with-open [out-data (io/writer out-file)]
+      (csv/write-csv out-data out-sos)))
+
+
+
 >To download all the dependencies declared in the project.clj  simply run (at root) the following deps subcommand:
 
 lein deps 

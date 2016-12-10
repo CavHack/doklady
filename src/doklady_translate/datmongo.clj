@@ -4,13 +4,13 @@
 ;; load a dataset from a URL pointing to the data. 
 (def data 
   (read-dataset
-    "http://github.com/liebke/incanter/raw/master/data/cars.csv"
+    "http://github.com/CavHack/Doklady/db.csv"
      :header true))
 
 
 ;; the dataset could have been loaded with the incanter.datasets/get-dataset function
 (use 'incanter.datasets)
-(incanter.datasets/get-dataset :cars)
+(incanter.datasets/get-dataset :db)
 
 ;; view the dimensions of the dataset
 (dim data)
@@ -18,7 +18,7 @@
 ;; view the column names
 (col-names data)
 
-(with-data (get-dataset :cars)
+(with-data (get-dataset :db)
   (view (conj-cols (range (nrow $data)) $data)))
 
 ;; plot a scatter plot of speed vs. distance and add a regression line
