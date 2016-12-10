@@ -6,8 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [congomongo "0.4.1"]
                  [bigml/clj-bigml "0.1.0"]
-                 [incanter "1.5.4"]]
-
-:jvm-opts ["-Djsse.enableSNIExtension=false"])
-
+                 [incanter "1.5.4"]
+                 [org.clojure/data.csv "0.1.3"]
+                 [org.clojure/data.json "0.2.6"]])
 
