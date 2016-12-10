@@ -25,7 +25,7 @@ For example, remember that with the Java I/O we can implement a quick call to fe
                (print (char c)) 
                (recur (.read r))))))
 
-Also....
+The same procedure is similar for fetchning csv.
 
 (defn write-csv-file
   "Writes a csv file using a key and an s-o-s (sequence of sequences)"
@@ -52,7 +52,7 @@ You should get something like this:
 
 doklady_csv is a classic parser you can use for a non-lazy traversal using cvs-filename
 
-     (slurp-csv "test/test.csv"
+     (doklady-csv "db/db.csv"
      :cast-fns {:this #(Integer/parseInt %)})
 
 Let's delve into cast-fns:
@@ -61,6 +61,7 @@ Remember that cast-fns, as established in this article, is a mapping function wh
 
 
 Now, onto doklady_vector: This function Takes a sequence of maps, and transform them into a sequence of vectors. Options:
+
     `:header` - The header to be used. If not specified, this defaults to `(-> rows first keys)`. Only
     values corresponding to the specified header will be included in the output, and will be included in the
     order corresponding to this argument.
@@ -69,52 +70,8 @@ Now, onto doklady_vector: This function Takes a sequence of maps, and transform 
    `:format-header` - If specified, this function will be called on each element of the `:header` vector, and
     the result prepended to the output sequence. The default behaviour is to leave strings alone but stringify
     keyword names such that the `:` is removed from their string representation. Passing a falsey value will
-    leave the header unaltered in the output."
+    leave the header unaltered in the output.
 
->To download all the dependencies declared in the project.clj  simply run (at root) the following deps subcommand:
-
-lein deps 
-
-Basic Functionality
-
-Step 1:
-
-First, load the basic incanter library
-
-use '(incanter core stats charts io )
-
-Next Load some CSV data using the incanter.io/read-dataset function, which
-takes a string representing either a filename or a URL to the data.
-
-(def data 
-    (read-dataset
-        "https://raw.githubusercontent.com/incanter/incanter/master/data/cars.csv"
-        :header true))
-
-the default delimiter is \, but a different one can be specified with the :delim param (e.g: \tab).
-The cars csv file is a small sample data set that is included in the Incanter distribution, and therefore
-could have been loaded using get-dataset
-
-(incanter/datasets/get-dataset : cars)
-
-we can get some information on the dataset, like the number of rows and columns using either the dim function or the nrow and ncol
-functions, and we can view the column names with the col-names function
-
-user> (dim data)
-[50 2]
-user> (col-names data)
-["Speed" "dist"]
-
-We will use Incanter's new with-data macro and $ column-selector function to access the datatset's columns.
-Within the body of a with-data expression, columns of the bound dataset can be accessed by name or index,
-using the $ function, for instance ($ :colname) or ($ 0)
-
-For example, to prepend an integer ID column to the dataset, and then display it:
-
-(with-data (get-dataset :cars)
-    (view (conj-cols (range (nrow $data)) $data)))
-
-the conj-cols function returns a dataset by conjoining sequences together as the columns of the dataset, or by prepending or appending columns to an existing dataset, and the related conj-rows function conjoin rows.
 
 
 
