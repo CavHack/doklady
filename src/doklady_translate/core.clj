@@ -63,10 +63,10 @@
       (doall
         (impl/apply-kwargs parse-and-process in-file opts)))))
 
-(defn vectorize
+(defn doklady_vectorize
 
   ([rows]
-   (vectorize {} rows))
+   (doklady_vectorize {} rows))
   ([{:keys [header prepend-header format-header]
      :or {prepend-header true format-header impl/stringify-keyword}}
     rows]
@@ -81,25 +81,51 @@
           (?>> prepend-header (cons out-header))))))
 
 
-;; Let's see this in action:
-;;
-;;     => (let [data [{:this "a" :that "b"}
-;;                    {:this "x" :that "y"}]]
-;;          (vectorize data))
-;;     (["this" "that"]
-;;      ["a" "b"]
-;;      ["x" "y"])
-;;
-;; With some options:
-;;
-;;     => (let [data [{:this "a" :that "b"}
-;;                    {:this "x" :that "y"}]]
-;;          (vectorize {:header [:that :this]
-;;                      :prepend-header false}
-;;                     data))
-;;     (["b" "a"]
-;;      ["y" "x"])
 
 
-;; <br/>
-;; ## batch
+;; "Takes sequence of items and returns a sequence of batches of items from the original
+;; sequence, at most `n` long."
+
+(defn batch
+  [n rows]
+  (partition n n [] rows))
+
+(defn doklady_serpent_csv
+  ;;"Convenience function for spitting out CSV data to a file using `clojure-csv`.
+  ;;* `file` - Can be either a filename string, or a file handle.
+  ;;* `opts` - Optional hash of settings.
+  ;;* `rows` - Can be a sequence of either maps or vectors; if the former, vectorize will be
+  ;; called on the input with `:header` argument specifiable through `opts`.
+  ;;The Options hash can have the following mappings:
+  ;;* `:batch-size` - How many rows to format and write at a time?
+  ;;* `:cast-fns` - Formatter(s) to be run on row values. As with `cast-with` function, can be either a map
+    ;; of `column-name -> cast-fn`, or a single function to be applied to all values. Note that `str` is called
+     ;;on all values just before writing regardless of `:cast-fns`.
+  ;;* `:writer-opts` - Options hash to be passed along to `clojure-csv.core/write-csv`.
+  ;;* `:header` - Header to be passed along to `vectorize`, if necessary.
+  ;;* `:prepend-header` - Should the header be prepended to the rows written if `vectorize` is called?"
+  ([file rows]
+   (doklady-serpent-csv file {} rows))
+  ([file
+    {:keys [batch-size cast-fns writer-opts header prepend-header]
+     :or   {batch-size 20 prepend-header true}
+     :as   opts}
+    rows]
+   (if (string? file)
+     (with-open [file-handle (io/writer file)]
+       (doklady-serpent-csv file-handle opts rows))
+     ; Else assume we already have a file handle
+     (->> rows
+          (?>> cast-fns (cast-with cast-fns))
+          (?>> (-> rows first map?)
+               (vectorize {:header header
+                           :prepend-header prepend-header}))
+          ; For safe measure
+          (cast-with str)
+          (batch batch-size)
+          (map #(impl/apply-kwargs csv/write-csv % writer-opts))
+          (reduce
+            (fn [w rowstr]
+              (.write w rowstr)
+              w)
+            file)))))
