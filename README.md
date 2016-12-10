@@ -35,7 +35,41 @@ Also....
   (with-open [out-data (io/writer out-file)]
       (csv/write-csv out-data out-sos)))
 
+With doklady you could use the following:
 
+     user=> (with-open [in-file (io/reader "db/db.csv")]
+          (->>
+            (csv/parse-csv in-file)
+            remove-comments
+            doklady_map
+            doall))
+
+You should get something like this:
+
+     ({:header1 "CompanyPriority", :header2 "role", :header3 "customer name"}
+      {:header2 "2CompanyPriority", :header2 "role", :header "customer name"})
+
+
+doklady_csv is a classic parser you can use for a non-lazy traversal using cvs-filename
+
+     (slurp-csv "test/test.csv"
+     :cast-fns {:this #(Integer/parseInt %)})
+
+Let's delve into cast-fns:
+
+Remember that cast-fns, as established in this article, is a mapping function which encapsulates how rows and columns are defined, parsed, and interpreted by the machine; it provides a mapping function which queries first row/item onward, ideally this should be handled more efficiently, but it is a helper functiona after all.
+
+
+Now, onto doklady_vector: This function Takes a sequence of maps, and transform them into a sequence of vectors. Options:
+    `:header` - The header to be used. If not specified, this defaults to `(-> rows first keys)`. Only
+    values corresponding to the specified header will be included in the output, and will be included in the
+    order corresponding to this argument.
+    `:prepend-header` - Defaults to true, and controls whether the `:header` vector should be prepended
+    to the output sequence.
+   `:format-header` - If specified, this function will be called on each element of the `:header` vector, and
+    the result prepended to the output sequence. The default behaviour is to leave strings alone but stringify
+    keyword names such that the `:` is removed from their string representation. Passing a falsey value will
+    leave the header unaltered in the output."
 
 >To download all the dependencies declared in the project.clj  simply run (at root) the following deps subcommand:
 
