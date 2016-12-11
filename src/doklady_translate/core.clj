@@ -1,3 +1,15 @@
+;;
+;; doklady_translate is structured around a number of composable processing functions for transforming data as it
+;; comes out of or goes into a CSV file.
+;; This leaves room for you to use whatever parsing/formatting tools you like, reflecting a nice decoupling
+;; of grammar and semantics.
+;; However, a couple of convenience functions are also provided which wrap these individual steps
+;; in an opinionated but customizable manner, helping you move quickly while prototyping or working at the
+;; REPL.
+;;Collision check with SQL libraries and extend Chesire to transmutate a lingua franca.
+;;our ultimate goal is a lazy semantic parser that checks on a Nosql/SQL databse as domain-ketchup.
+;;For corporate use we will implement an excel output using incanter.
+
 (ns doklady_translate.core 
      (:require [clojure.java.io :as io]
                [clojure.string :as s]
@@ -12,7 +24,8 @@
                [clojure.data.json :refer [read-str]]
                [cheshire.core :refer [parse-string]]
                [cheshire.core :refer :all]
-  (:import  [java.net URL])))
+	       [clojure.java.jdbc :as j]
+  (:import  [java.net URL]))
 (defn doklady_map 
    ;; "Parse from row vectors and return a map"
     ([rows]
@@ -21,7 +34,9 @@
      let [consume-header(not header) 
           header (if header
                      header
-                     (first rows)) 
+                     (first rows)
+		     ;;using java jdbc, fetch the SQL entries.
+		     (j/query db-spec ["SELECT" * FROM db"])) 
           header (cond 
                      transform-header (mapv transform-header header)
                      dokladySec (mapv keyword header)
@@ -139,3 +154,7 @@
               (.write w rowstr)
               w)
             file)))))
+
+
+
+})

@@ -1,6 +1,6 @@
-# doklady-translate
+# doklady_translate
 
-doklady-translate is a simple example of mongoDB data query in Clojure using Incanter. 
+doklady_translate is inspired by PageRank: our end-goal is the ability to build a clojure LISP-friendly domain-ketchup: by domain-ketchup we refer to an implementation of a semantic parser, which like SQL, allows us to treat doklady_language as a domain bypass which does not lose the inherent benefits of a domain language: in fact, with doklady_translate you are encouraged to treat SQL as SQL; a mathematical trick to treat datum as tuples; tuples and monoids are categories of multiplicative artin groups(more on this later). In plain english: doklady_translate allows us to read into a CSV, TXT(UTF-8) and collision-check with a SQL database using clojure's JSON Smiles in a lazy sequence of chars. The collision check algorithm should in addition parse a result on the terminal as you would treat any repl command.
 
 ## Usage
 

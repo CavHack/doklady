@@ -13,5 +13,8 @@
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.7.5"]
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.7.5"]
                  [tigris "0.1.1"]
-                 [cheshire "5.6.3"]])
+                 [cheshire "5.6.3"]
+		 [org.clojure/java.jdbc "0.5.8"]
+		 [instaparse "1.4.1"]])
+)
 
