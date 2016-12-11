@@ -1,5 +1,5 @@
 (defproject doklady-translate "0.1.0-SNAPSHOT"
-  :description "A simle stringbuilder and JSON decoder for semantic streams. Read in CSV, analyze, and Collission Check with JSON File."
+  :description "A CSV/JSON/TXT/UTF8 probabilistic parser built atop a Java stringbuilder JSON Smile semaphore which should allow for functional semantic parsing of streams with the ability to treat datum as tuples, the way SQL was intended to be. Read in CSV, analyze, and Collission Check with JSON File or SQL database. Allow for NoSQL functionality."
   :url "http://www.github.com/CavHack/doklady"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

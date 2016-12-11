@@ -1,8 +1,18 @@
 (ns doklady_translate.core 
-    "#MAIN" (:require[clojure.java.io :as io]
-                     [clojure.string :as s]
-                     [clojure-csv.core :as csv]
-                     [doklady_translate.impl.core :as impl :refer[?>>]]))
+     (:require [clojure.java.io :as io]
+               [clojure.string :as s]
+               [clojure-csv.core :as csv]
+               [doklady_translate.impl.core :as impl :refer[?>>]]
+               [incanter.excel :refer [read-xls]]
+               [net.cgrand.enlive-html :as html]
+               [clojure.java.jdbc :refer [with-connection with-query-results]]
+               [clojure.xml :refer [parse]]
+               [clojure.string :as string]]
+               [clojure.zip :refer [children down right xml-zip]]
+               [clojure.data.json :refer [read-str]]
+               [cheshire.core :refer [parse-string]]
+               [cheshire.core :refer :all]
+  (:import  [java.net URL])))
 (defn doklady_map 
    ;; "Parse from row vectors and return a map"
     ([rows]
